@@ -22,9 +22,9 @@ mvn spring-boot:run -Dspring-boot.run.main-class=example.library.server.LibraryS
 ```
 The Library server will start on port 7862: http://localhost:7862
 
-![Movies Server](movies_server.png)
-![Library Server](library_server.png)
-
+![Movies Server](claude.png)
+![Library Server](claude1.png)
+![Library Server](gabbar.png)
 
 ## MCP Server and Client Example
 
