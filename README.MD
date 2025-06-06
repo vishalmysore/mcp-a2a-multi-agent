@@ -9,18 +9,131 @@ This project implements two separate servers:
 
 ### Movies Server
 To start the Movies server, run:
+
 ```bash
 mvn spring-boot:run -Pmovies -Dspring-boot.run.jvmArguments=-Dtools4ai.properties.path=tools4ai_movies.properties
 ```
+
 The Movies server will start on port 7861: http://localhost:7861
 
-Note: Specifying the main class `-Dspring-boot.run.main-class` is important as there are multiple Spring Boot applications in the project.
+Note: Specifying profile with the main class is important as there are multiple Spring Boot applications in the project.
+
+The Movie servers starts with its own application properties
+
+```
+@SpringBootApplication
+@EnableAgent
+@PropertySource("classpath:application-movies.properties")
+public class MoviesServer {
+
+    public static void main(String[] args) {
+
+        SpringApplication.run(MoviesServer.class, args);
+    }
+}
+
+
+```
+
+This application properties has its own tools4ai properties file which is used to configure the actions for the Movies server.
+
+```properties
+tools4ai.properties.path=tools4ai_movies.properties
+```
+
+The `tools4ai_movies.properties` file contains the configuration for the actions specific to the Movies server, such as:
+
+```properties
+action.packages.to.scan=example.movies.server
+```
+and all the actions defined in the `example.movies.server` package will be scanned and registered as tools.
+
+```
+package example.movies.server;
+
+import com.t4a.annotations.Action;
+import com.t4a.annotations.Agent;
+import com.t4a.detect.ActionCallback;
+import com.t4a.processor.AIProcessor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+@Service
+@Agent(groupName = "movieOperations", groupDescription = "Manage Bollywood movie operations like getting movie lists and famous dialogues")
+@Slf4j
+public class MoviesService {
+
+    private ActionCallback callback;
+    private AIProcessor processor;
+
+    public MoviesService() {
+        log.info("Created Movies Service");
+    }
+
+    @Action(description = "Get a list of popular Bollywood movies")
+    public String getBollywoodMovies() {
+        log.info("Fetching Bollywood movies list");
+        return "Popular Bollywood Movies: DDLJ, Sholay, Mother India, Mughal-e-Azam, PK";
+    }
+
+    @Action(description = "Get movies starring Shah Rukh Khan")
+    public String getSRKMovies() {
+        log.info("Fetching SRK movies");
+        return "SRK Movies: DDLJ, Chennai Express, Pathaan, Chak De India, My Name Is Khan";
+    }
+
+    @Action(description = "Get movies starring Amitabh Bachchan")
+    public String getAmitabhMovies() {
+        log.info("Fetching Amitabh Bachchan movies");
+        return "Amitabh Movies: Sholay, Deewar, Zanjeer, Don, Agneepath";
+    }
+
+    @Action(description = "Check if a given dialog is from a movie")
+    public String checkDialog(String dialog) {
+        log.info("Checking dialog: '{}'", dialog);
+        if (dialog.contains("Mogambo")) {
+            return "This is from Mr. India";
+        } else if (dialog.contains("Kitne aadmi the")) {
+            return "This is from Sholay";
+        } else {
+            return "Dialog not recognized";
+        }
+    }
+
+    @Action(description = "Get famous dialogues by Gabbar Singh")
+    public String gabbarSpeaks() {
+        log.info("Getting Gabbar's dialogues");
+        return "Famous Gabbar dialogues: 'Kitne aadmi the?', 'Jo dar gaya samjho mar gaya', 'Holi kab hai? Kab hai Holi?'";
+    }
+}
+
+```
+
+
 
 ### Library Server
 To start the Library server, run:
 ```bash
 mvn spring-boot:run -Plibrary -Dspring-boot.run.jvmArguments=-Dtools4ai.properties.path=tools4ai_library.properties
 ```
+
+You can also provide tools properties file using application properties
+``` 
+spring.application.name=spring-boot
+server.port=7862
+a2a.persistence=cache
+tools4ai.properties.path=tools4ai_library.properties
+```
+
+
+As you can see both the servers have there individual tools4ai properties file 
+each file has  a separate  action.packages.to.scan.
+So the movie serer adds actions from the movie package and the library server adds actions from the library package.
+
+``` 
+action.packages.to.scan=example.movies.server
+```
+
 The Library server will start on port 7862: http://localhost:7862
 
 ![Movies Server](claude.png)

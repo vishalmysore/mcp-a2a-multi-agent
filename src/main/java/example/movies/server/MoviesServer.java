@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.PropertySource;
 
 /**
- * run this program with the following properties:
+ * run this program with the following properties or specify this ins applicaiton-movies.properties
  * -Dtools4ai.properties.path=tools4ai_movies.properties
  */
 @SpringBootApplication
