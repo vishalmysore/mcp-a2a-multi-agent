@@ -11,7 +11,7 @@ This project implements two separate servers:
 To start the Movies server, run:
 
 ```bash
-mvn spring-boot:run -Pmovies -Dspring-boot.run.jvmArguments=-Dtools4ai.properties.path=tools4ai_movies.properties
+mvn spring-boot:run -Pmovies 
 ```
 
 The Movies server will start on port 7861: http://localhost:7861
@@ -114,7 +114,7 @@ public class MoviesService {
 ### Library Server
 To start the Library server, run:
 ```bash
-mvn spring-boot:run -Plibrary -Dspring-boot.run.jvmArguments=-Dtools4ai.properties.path=tools4ai_library.properties
+mvn spring-boot:run -Plibrary 
 ```
 
 You can also provide tools properties file using application properties
